@@ -13,10 +13,26 @@ namespace CefBrowserCacheTest
 {
     public class App : WindowsFormsApplicationBase
     {
-        public static readonly CefSettings CEF_SETTINGS;
+        public static CefSettings CEF_SETTINGS
+        {
+            get;
+            private set;
+        }
+
+        [STAThread]
+        private static void Main(string[] args)
+        {
+            CefInitialize();
+            new App()
+            {
+                EnableVisualStyles = true,
+                MainForm = new Form1()
+            }
+            .Run(args);
+        }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        static App()
+        private static void CefInitialize()
         {
             CefRuntime.SubscribeAnyCpuAssemblyResolver();
             var cachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"MyApp\CefSharp\Cache");
@@ -27,17 +43,6 @@ namespace CefBrowserCacheTest
                 PersistUserPreferences = true,
             };
             Cef.Initialize(CEF_SETTINGS, performDependencyCheck: true, browserProcessHandler: null);
-        }
-
-        [STAThread]
-        private static void Main(string[] args)
-        {
-            new App()
-            {
-                EnableVisualStyles = true,
-                MainForm = new Form1()
-            }
-            .Run(args);
         }
     }
 }
