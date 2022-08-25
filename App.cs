@@ -28,11 +28,7 @@ namespace CefBrowserCacheTest
         [STAThread]
         private static void Main(string[] args)
         {
-            new App()
-            {
-                MainForm = new Form1()
-            }
-            .Run(args);
+            new App() { MainForm = new Form1() }.Run(args);
         }
     }
 }

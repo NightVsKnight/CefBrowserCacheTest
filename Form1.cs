@@ -3,37 +3,32 @@ using CefSharp;
 using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace CefBrowserCacheTest
 {
     public partial class Form1 : Form
     {
-        private ChromiumWebBrowser browser;
+        private readonly ChromiumWebBrowser browser;
 
         public Form1()
         {
             InitializeComponent();
-        }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            if (!Cef.IsInitialized)
-            {
-                throw new InvalidOperationException("Cef.Initialize(...) must be called first");
-            }
+            if (!Cef.IsInitialized) throw new InvalidOperationException("Cef.Initialize(...) must be called first");
 
             var appSettings = App.CEF_SETTINGS;
+            Debug.Assert(appSettings != null, "appSettings should not be null");
             var cachePath = Path.Combine(appSettings.CachePath, "User_Profile");
 
-            RequestContextSettings requestContextSettings = new RequestContextSettings();
-            if (!String.IsNullOrEmpty(cachePath))
+            RequestContextSettings requestContextSettings = new RequestContextSettings()
             {
-                requestContextSettings.CachePath = cachePath;
-                requestContextSettings.PersistSessionCookies = true;
-                requestContextSettings.PersistUserPreferences = true;
-            }
+                CachePath = cachePath,
+                PersistSessionCookies = true,
+                PersistUserPreferences = true,
+            };
 
-            browser = new ChromiumWebBrowser(String.Empty)
+            browser = new ChromiumWebBrowser("www.google.com")
             {
                 BrowserSettings = new BrowserSettings()
                 {
