@@ -9,26 +9,30 @@ namespace CefBrowserCacheTest
 {
     public class Program
     {
-        public static readonly CefSettings CEF_SETTINGS;
-
         [MethodImpl(MethodImplOptions.NoInlining)]
-        static Program()
+        private static int CefInitialize(string[] args)
         {
             CefRuntime.SubscribeAnyCpuAssemblyResolver();
-            var cachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"MyApp\CefSharp\Cache");
-            CEF_SETTINGS = new CefSettings()
+            Cef.EnableHighDPISupport();
+            var exitCode = CefSharp.BrowserSubprocess.SelfHost.Main(args);
+            if (exitCode >= 0) return exitCode;
+            var cefSettings = new CefSettings()
             {
-                CachePath = cachePath,
+                CachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"MyApp\CefSharp\Cache"),
                 PersistSessionCookies = true,
                 PersistUserPreferences = true,
+                BrowserSubprocessPath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName,
             };
-            Cef.Initialize(CEF_SETTINGS, performDependencyCheck: true, browserProcessHandler: null);
+            Cef.Initialize(cefSettings, performDependencyCheck: false, browserProcessHandler: null);
+            return 0;
         }
 
         [STAThread]
-        static void Main()
+        public static int Main(string[] args)
         {
+            CefInitialize(args);
             Application.Run(new Form1());
+            return 0;
         }
     }
 }

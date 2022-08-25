@@ -14,29 +14,18 @@ namespace CefBrowserCacheTest
         public Form1()
         {
             InitializeComponent();
-
             if (!Cef.IsInitialized) throw new InvalidOperationException("Cef.Initialize(...) must be called first");
-
-            var cefSettings = Program.CEF_SETTINGS;
-            Debug.Assert(cefSettings != null, "cefSettings should not be null");
-            var cachePath = Path.Combine(cefSettings.CachePath, "User_Profile");
-
-            RequestContextSettings requestContextSettings = new RequestContextSettings()
-            {
-                CachePath = cachePath,
-                PersistSessionCookies = true,
-                PersistUserPreferences = true,
-            };
-
-            browser = new ChromiumWebBrowser("www.google.com")
+            browser = new ChromiumWebBrowser("restream.io")
             {
                 BrowserSettings = new BrowserSettings()
                 {
                     LocalStorage = CefState.Enabled,
                 },
-                RequestContext = new RequestContext(requestContextSettings)
+                RequestContext = RequestContext.Configure()
+                            .WithSharedSettings(Cef.GetGlobalRequestContext())
+                            .Create(),
             };
-
+            browser.Dock = DockStyle.Fill;
             Controls.Add(browser);
         }
     }
