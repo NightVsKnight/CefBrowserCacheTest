@@ -17,9 +17,9 @@ namespace CefBrowserCacheTest
 
             if (!Cef.IsInitialized) throw new InvalidOperationException("Cef.Initialize(...) must be called first");
 
-            var appSettings = App.CEF_SETTINGS;
-            Debug.Assert(appSettings != null, "appSettings should not be null");
-            var cachePath = Path.Combine(appSettings.CachePath, "User_Profile");
+            var cefSettings = Program.CEF_SETTINGS;
+            Debug.Assert(cefSettings != null, "cefSettings should not be null");
+            var cachePath = Path.Combine(cefSettings.CachePath, "User_Profile");
 
             RequestContextSettings requestContextSettings = new RequestContextSettings()
             {

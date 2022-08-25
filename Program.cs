@@ -1,18 +1,18 @@
-﻿using Microsoft.VisualBasic.ApplicationServices;
-using CefSharp.WinForms;
+﻿using CefSharp.WinForms;
 using CefSharp;
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Windows.Forms;
 
 namespace CefBrowserCacheTest
 {
-    public class App : WindowsFormsApplicationBase
+    public class Program
     {
         public static readonly CefSettings CEF_SETTINGS;
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        static App()
+        static Program()
         {
             CefRuntime.SubscribeAnyCpuAssemblyResolver();
             var cachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"MyApp\CefSharp\Cache");
@@ -26,9 +26,9 @@ namespace CefBrowserCacheTest
         }
 
         [STAThread]
-        private static void Main(string[] args)
+        static void Main()
         {
-            new App() { MainForm = new Form1() }.Run(args);
+            Application.Run(new Form1());
         }
     }
 }
